@@ -6,47 +6,51 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'volunteer') {
     exit();
 }
 
-$upcomingEvents = array(
-    array('name' => 'Volunteer Event 1', 'date' => '2023-08-10', 'location' => 'Community Center'),
-    array('name' => 'Volunteer Event 2', 'date' => '2023-08-20', 'location' => 'Park')
-);
+if (isset($_SESSION['registration_message'])) {
+    echo '<div class="registration-message">' . $_SESSION['registration_message'] . '</div>';
+    unset($_SESSION['registration_message']); // Clear the message
+}
 
-$volunteerOpportunities = array(
-    array('name' => 'Teaching Assistant', 'location' => 'Local School'),
-    array('name' => 'Food Drive Volunteer', 'location' => 'Food Bank')
-);
 
+$host = "localhost";
+$username = "root";
+$password = "mysql";
+$database = "php";
+
+$conn = mysqli_connect($host, $username, $password, $database);
+
+if (!$conn) {
+    die("Database connection failed: " . mysqli_connect_error());
+}
+
+$sql = "SELECT * FROM events";
+$result = mysqli_query($conn, $sql);
+
+$upcomingEvents = array();
+
+while ($row = mysqli_fetch_assoc($result)) {
+    $upcomingEvents[] = $row;
+}
+
+mysqli_close($conn);
+
+include('header.php');
 ?>
-
-<?php include('header.php'); ?>
 <main>
     <h1>Welcome, Volunteer!</h1>
     <h2>Upcoming Events</h2>
-    <?php if (empty($upcomingEvents)) : ?>
+    <?php if (empty($upcomingEvents)): ?>
         <p>No upcoming events found.</p>
-    <?php else : ?>
+    <?php else: ?>
         <ul>
-            <?php foreach ($upcomingEvents as $event) : ?>
-                <li>
-                    <strong><?php echo $event['name']; ?></strong>
-                    <br>Date: <?php echo $event['date']; ?>
-                    <br>Location: <?php echo $event['location']; ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
-
-    <h2>Volunteer Opportunities</h2>
-    <?php if (empty($volunteerOpportunities)) : ?>
-        <p>No volunteer opportunities found.</p>
-    <?php else : ?>
-        <ul>
-            <?php foreach ($volunteerOpportunities as $opportunity) : ?>
-                <li>
-                    <strong><?php echo $opportunity['name']; ?></strong>
-                    <br>Location: <?php echo $opportunity['location']; ?>
-                </li>
-            <?php endforeach; ?>
+<?php foreach ($upcomingEvents as $event) : ?>
+    <li>
+        <strong><?php echo $event['event_name']; ?></strong><br>
+        Date: <?php echo $event['event_date']; ?><br>
+        Location: <?php echo $event['event_location']; ?><br>
+        <a href="register_event.php?event_id=<?php echo $event['event_id']; ?>">Register</a>
+    </li>
+<?php endforeach; ?>
         </ul>
     <?php endif; ?>
 </main>
