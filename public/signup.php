@@ -33,13 +33,16 @@ if (isset($_POST['usignup'])) {
     if (mysqli_query($conn, $sql)) {
         $_SESSION['user_id'] = mysqli_insert_id($conn);
         $_SESSION['user_role'] = $role;
-        header('Location: volunteer_dashboard.php');
+        if($role = 'volunteer'){
+            header('Location: ../private/volunteer_dashboard.php');
+        } else if ($role = 'organization') {
+            header('Location: ../private/organization_dashboard.php');
+        }
         exit();
     } else {
         $umsg = "Error: " . mysqli_error($conn);
     }
 }
-
 mysqli_close($conn);
 ?>
 

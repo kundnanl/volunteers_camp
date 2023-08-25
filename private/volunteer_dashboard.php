@@ -8,9 +8,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'volunteer') {
 
 if (isset($_SESSION['registration_message'])) {
     echo '<div class="registration-message">' . $_SESSION['registration_message'] . '</div>';
-    unset($_SESSION['registration_message']); // Clear the message
+    unset($_SESSION['registration_message']);
 }
-
 
 $host = "localhost";
 $username = "root";

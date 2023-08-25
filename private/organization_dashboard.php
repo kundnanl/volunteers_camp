@@ -46,16 +46,18 @@ mysqli_close($conn);
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Organization Dashboard</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
     <?php include 'header.php'; ?>
     <main>
         <h1>Welcome, Organization!</h1>
-        
+
         <h2>Create Event</h2>
         <form method="post" action="organization_dashboard.php">
             <label>Event Name: <input type="text" name="event_name" required></label><br>
@@ -64,20 +66,28 @@ mysqli_close($conn);
             <label>Volunteers Needed: <input type="number" name="volunteers_needed" required></label><br>
             <input type="submit" name="create_event" value="Create Event">
         </form>
-        
-        <p><?php echo $eventCreationMessage; ?></p>
 
+        <p>
+            <?php echo $eventCreationMessage; ?>
+        </p>
         <h2>Hosted Events</h2>
-        <?php if (mysqli_num_rows($hostedEventsResult) === 0) : ?>
+        <?php if (mysqli_num_rows($hostedEventsResult) === 0): ?>
             <p>No hosted events found.</p>
-        <?php else : ?>
+        <?php else: ?>
             <ul>
-                <?php while ($event = mysqli_fetch_assoc($hostedEventsResult)) : ?>
+                <?php while ($event = mysqli_fetch_assoc($hostedEventsResult)): ?>
                     <li>
-                        <strong><?php echo $event['event_name']; ?></strong>
-                        <br>Date: <?php echo $event['event_date']; ?>
-                        <br>Location: <?php echo $event['event_location']; ?>
-                        <br>Volunteers Needed: <?php echo $event['volunteers_needed']; ?>
+                        <strong>
+                            <?php echo $event['event_name']; ?>
+                        </strong>
+                        <br>Date:
+                        <?php echo $event['event_date']; ?>
+                        <br>Location:
+                        <?php echo $event['event_location']; ?>
+                        <br>Volunteers Needed:
+                        <?php echo $event['volunteers_needed']; ?>
+                        <br>
+                        <a href="view_volunteers.php?event_id=<?php echo $event['event_id']; ?>">View Volunteers</a>
                     </li>
                 <?php endwhile; ?>
             </ul>
@@ -85,4 +95,5 @@ mysqli_close($conn);
     </main>
     <?php include 'footer.php'; ?>
 </body>
+
 </html>
